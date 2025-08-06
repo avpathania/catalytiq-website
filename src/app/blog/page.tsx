@@ -20,19 +20,20 @@ export const metadata: Metadata = {
 };
 
 interface BlogPageProps {
-  searchParams: {
+  searchParams: Promise<{
     page?: string;
     category?: string;
     tag?: string;
     search?: string;
-  };
+  }>;
 }
 
-export default function BlogPage({ searchParams }: BlogPageProps) {
-  const page = parseInt(searchParams.page || '1', 10);
-  const category = searchParams.category;
-  const tag = searchParams.tag;
-  const search = searchParams.search;
+export default async function BlogPage({ searchParams }: BlogPageProps) {
+  const params = await searchParams;
+  const page = parseInt(params.page || '1', 10);
+  const category = params.category;
+  const tag = params.tag;
+  const search = params.search;
 
   return (
     <MainLayout>

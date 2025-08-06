@@ -180,10 +180,13 @@ export async function getRelatedPosts(
         title: post.title,
         slug: post.slug,
         excerpt: post.excerpt,
-        featured_image_url: post.featured_image_url,
-        published_at: post.published_at,
+        featured_image_url: post.featured_image_url || undefined,
+        published_at: post.published_at || '',
         reading_time: post.reading_time,
-        author: post.author,
+        author: {
+          ...post.author,
+          avatar_url: post.author?.avatar_url || undefined,
+        },
         categories: post.categories?.map((pc: any) => pc.category) || [],
       }));
   } catch (error) {
@@ -201,7 +204,11 @@ export async function getCategories(): Promise<Category[]> {
 
     if (error) handleSupabaseError(error);
 
-    return data || [];
+    return data?.map(category => ({
+      ...category,
+      description: category.description || undefined,
+      color: category.color || undefined,
+    })) || [];
   } catch (error) {
     handleSupabaseError(error);
   }
@@ -233,7 +240,12 @@ export async function getAuthors(): Promise<Author[]> {
 
     if (error) handleSupabaseError(error);
 
-    return data || [];
+    return data?.map(author => ({
+      ...author,
+      bio: author.bio || undefined,
+      avatar_url: author.avatar_url || undefined,
+      linkedin_url: author.linkedin_url || undefined,
+    })) || [];
   } catch (error) {
     handleSupabaseError(error);
   }
@@ -242,11 +254,21 @@ export async function getAuthors(): Promise<Author[]> {
 // Increment view count for a blog post
 export async function incrementViewCount(postId: string): Promise<void> {
   try {
-    const { error } = await supabase.rpc('increment_view_count', {
-      post_id: postId
-    });
+    // Get current view count and increment
+    const { data: currentPost } = await supabase
+      .from('blog_posts')
+      .select('view_count')
+      .eq('id', postId)
+      .single();
 
-    if (error) handleSupabaseError(error);
+    if (currentPost) {
+      const { error } = await supabase
+        .from('blog_posts')
+        .update({ view_count: (currentPost.view_count || 0) + 1 })
+        .eq('id', postId);
+
+      if (error) handleSupabaseError(error);
+    }
   } catch (error) {
     // Don't throw error for view count increment failures
     console.warn('Failed to increment view count:', error);
@@ -309,12 +331,16 @@ export async function createBlogPost(data: CreateBlogPostData): Promise<BlogPost
   try {
     const readingTime = calculateReadingTime(data.content);
     
+    // Remove fields that don't belong in the insert
+    const { category_ids, tag_ids, ...insertData } = data;
+    
     const { data: post, error } = await supabase
       .from('blog_posts')
       .insert({
-        ...data,
+        ...insertData,
         reading_time: readingTime,
         view_count: 0,
+        seo_metadata: data.seo_metadata as any,
       })
       .select(`
         *,

@@ -23,9 +23,9 @@ const nextConfig: NextConfig = {
   // SWC minification is enabled by default in Next.js 15
   
   // Enable experimental features for better performance
-  experimental: {
-    optimizeCss: true,
-  },
+  // experimental: {
+  //   optimizeCss: true, // Disabled due to missing critters dependency
+  // },
   
   // Configure headers for better SEO and security
   async headers() {
