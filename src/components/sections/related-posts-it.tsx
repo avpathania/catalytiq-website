@@ -14,9 +14,10 @@ interface RelatedPostsITProps {
   currentPostId: string;
   categories: string[];
   tags: string[];
+  variant?: 'grid' | 'sidebar';
 }
 
-export function RelatedPostsIT({ currentPostId, categories, tags }: RelatedPostsITProps) {
+export function RelatedPostsIT({ currentPostId, categories, tags, variant = 'grid' }: RelatedPostsITProps) {
   const [relatedPosts, setRelatedPosts] = useState<RelatedPost[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -41,11 +42,26 @@ export function RelatedPostsIT({ currentPostId, categories, tags }: RelatedPosts
   }, [currentPostId, categories, tags]);
 
   if (loading) {
-    return <RelatedPostsSkeleton />;
+    return <RelatedPostsSkeleton variant={variant} />;
   }
 
   if (relatedPosts.length === 0) {
     return null;
+  }
+
+  if (variant === 'sidebar') {
+    return (
+      <aside className="space-y-6">
+        <h2 className="text-xl font-bold tracking-tight border-b pb-3">
+          Articoli Correlati
+        </h2>
+        <div className="flex flex-col gap-4">
+          {relatedPosts.map((post) => (
+            <RelatedPostCardIT key={post.id} post={post} compact />
+          ))}
+        </div>
+      </aside>
+    );
   }
 
   return (
@@ -70,7 +86,47 @@ export function RelatedPostsIT({ currentPostId, categories, tags }: RelatedPosts
   );
 }
 
-function RelatedPostCardIT({ post }: { post: RelatedPost }) {
+function RelatedPostCardIT({ post, compact = false }: { post: RelatedPost; compact?: boolean }) {
+  if (compact) {
+    return (
+      <Card className="overflow-hidden border-0 bg-card/50 backdrop-blur-sm hover:bg-card/70 transition-colors group">
+        <Link href={`/it/blog/${post.slug}`} className="flex gap-3 p-3">
+          <div className="relative w-20 h-20 flex-shrink-0 rounded-md overflow-hidden">
+            {post.featured_image_url ? (
+              <Image
+                src={post.featured_image_url}
+                alt={post.title}
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+            ) : (
+              <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
+                <span className="text-xl font-bold text-muted-foreground">
+                  {post.title.charAt(0)}
+                </span>
+              </div>
+            )}
+          </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="text-sm font-semibold line-clamp-2 group-hover:text-primary transition-colors mb-1">
+              {post.title}
+            </h3>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <div className="flex items-center gap-1">
+                <Calendar className="h-3 w-3" />
+                <span>{new Date(post.published_at).toLocaleDateString('it-IT')}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Clock className="h-3 w-3" />
+                <span>{post.reading_time} min</span>
+              </div>
+            </div>
+          </div>
+        </Link>
+      </Card>
+    );
+  }
+
   return (
     <Card className="overflow-hidden border-0 bg-card/50 backdrop-blur-sm hover:bg-card/70 transition-colors group">
       <Link href={`/it/blog/${post.slug}`}>
@@ -130,7 +186,30 @@ function RelatedPostCardIT({ post }: { post: RelatedPost }) {
   );
 }
 
-function RelatedPostsSkeleton() {
+function RelatedPostsSkeleton({ variant = 'grid' }: { variant?: 'grid' | 'sidebar' }) {
+  if (variant === 'sidebar') {
+    return (
+      <aside className="space-y-6">
+        <div className="h-6 bg-muted rounded w-36 animate-pulse" />
+        <div className="flex flex-col gap-4">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="flex gap-3 p-3 animate-pulse">
+              <div className="w-20 h-20 bg-muted rounded-md flex-shrink-0" />
+              <div className="flex-1">
+                <div className="h-4 bg-muted rounded mb-2" />
+                <div className="h-4 bg-muted rounded w-3/4 mb-2" />
+                <div className="flex gap-2">
+                  <div className="h-3 bg-muted rounded w-16" />
+                  <div className="h-3 bg-muted rounded w-12" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </aside>
+    );
+  }
+
   return (
     <section className="py-20 bg-muted/30">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">

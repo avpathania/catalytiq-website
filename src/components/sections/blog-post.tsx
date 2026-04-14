@@ -14,9 +14,9 @@ interface BlogPostProps {
 
 export function BlogPost({ post }: BlogPostProps) {
   return (
-    <div className="py-20">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
+    <div className="py-8">
+      <div>
+        <div>
           {/* Back to Blog */}
           <div className="mb-8">
             <Button variant="ghost" asChild>
