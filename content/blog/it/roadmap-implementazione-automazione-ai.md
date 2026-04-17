@@ -10,7 +10,7 @@ author:
   name: "Massimo Menoncin"
   email: "massimo@catalytiq.systems"
   bio: "Massimo Menoncin aiuta le aziende europee a identificare ed eliminare i costi nascosti del lavoro manuale attraverso l'automazione basata sull'intelligenza artificiale."
-  linkedin_url: "https://www.linkedin.com/in/massimomenoncin"
+  linkedin_url: "https://it.linkedin.com/in/massimomenoncin/it"
 categories:
   - name: "Automazione"
     slug: "automazione"

@@ -10,7 +10,7 @@ author:
   name: "CatalytIQ Systems Team"
   email: "team@catalytiq.com"
   bio: "Business automation experts helping SMEs transform their operations with AI and intelligent workflows."
-  linkedin_url: "https://linkedin.com/company/catalytiq"
+  linkedin_url: "https://www.linkedin.com/company/catalytiq-systems-srl/"
 categories:
   - name: "Automation Insights"
     slug: "automation-insights"

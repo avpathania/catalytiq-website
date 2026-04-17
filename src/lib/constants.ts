@@ -6,8 +6,9 @@ export const SITE_CONFIG = {
   url: "https://catalytiq.com",
   ogImage: "/og-image.jpg",
   links: {
-    twitter: "https://twitter.com/catalytiq",
-    linkedin: "https://linkedin.com/company/catalytiq",
+    twitter: "https://x.com/catalitiq_italy",
+    linkedin: "https://www.linkedin.com/company/catalytiq-systems-srl/",
+    youtube: "https://www.youtube.com/@CatalytIQSystems",
     github: "https://github.com/catalytiq",
   },
 } as const;

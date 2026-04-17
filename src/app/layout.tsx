@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "CatalytIQ Systems - AI-Powered Business Automation for SMEs",
     description: "Transform your SME with intelligent automation solutions. Reduce manual work by 80%, improve accuracy, and scale your operations with our AI-powered workflows.",
-    creator: "@catalytiq",
+    creator: "@catalitiq_italy",
   },
   robots: {
     index: true,

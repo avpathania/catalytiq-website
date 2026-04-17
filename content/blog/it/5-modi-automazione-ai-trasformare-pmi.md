@@ -10,7 +10,7 @@ author:
   name: "Team CatalytIQ Systems"
   email: "team@catalytiq.com"
   bio: "Esperti di automazione aziendale che aiutano le PMI a trasformare le loro operazioni con AI e flussi di lavoro intelligenti."
-  linkedin_url: "https://linkedin.com/company/catalytiq"
+  linkedin_url: "https://www.linkedin.com/company/catalytiq-systems-srl/"
 categories:
   - name: "Approfondimenti sull'Automazione"
     slug: "approfondimenti-automazione"

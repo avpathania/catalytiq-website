@@ -1,12 +1,15 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
+import Image from 'next/image';
 import {
   MainLayout,
   BlogPost,
   RelatedPosts,
   SocialShare,
 } from '@/components';
+import { BlogToc } from '@/components/sections/blog-toc';
+import { ReadingProgress } from '@/components/ui/reading-progress';
 import { getBlogPostBySlug, incrementViewCount } from '@/lib/blog-markdown';
 
 interface BlogPostPageProps {
@@ -15,7 +18,6 @@ interface BlogPostPageProps {
   }>;
 }
 
-// Generate metadata for SEO
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   const { slug } = await params;
   const post = await getBlogPostBySlug(slug);
@@ -69,7 +71,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     notFound();
   }
 
-  // Increment view count (fire and forget)
   incrementViewCount(post.id).catch(console.warn);
 
   const shareData = {
@@ -81,8 +82,25 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   return (
     <MainLayout>
+      <ReadingProgress />
+
+      {/* Full-bleed featured image hero */}
+      {post.featured_image_url && (
+        <div className="relative w-full aspect-[21/9] max-h-[480px] overflow-hidden">
+          <Image
+            src={post.featured_image_url}
+            alt={post.title}
+            fill
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
+        </div>
+      )}
+
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-12 items-start">
+
           {/* Left: Article */}
           <article>
             <Suspense fallback={<BlogPostSkeleton />}>
@@ -92,8 +110,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <section className="py-8 border-t mt-4">
               <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
                 <div>
-                  <h3 className="text-lg font-semibold mb-2">Share this article</h3>
-                  <p className="text-muted-foreground">
+                  <h3 className="text-lg font-semibold mb-1">Share this article</h3>
+                  <p className="text-sm text-muted-foreground">
                     Help others discover insights on business automation
                   </p>
                 </div>
@@ -102,21 +120,27 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </section>
           </article>
 
-          {/* Right: Related Posts Sidebar */}
-          <div className="lg:sticky lg:top-8">
-            <Suspense fallback={<RelatedPostsSkeleton />}>
-              <RelatedPosts
-                currentPostId={post.id}
-                categories={post.categories?.map(c => c.slug) || []}
-                tags={post.tags?.map(t => t.slug) || []}
-                variant="sidebar"
-              />
+          {/* Right: TOC + Related Posts */}
+          <aside className="lg:sticky lg:top-8 space-y-8">
+            <Suspense fallback={null}>
+              <BlogToc content={post.content} />
             </Suspense>
-          </div>
+
+            <div className="border-t pt-8">
+              <Suspense fallback={<RelatedPostsSkeleton />}>
+                <RelatedPosts
+                  currentPostId={post.id}
+                  categories={post.categories?.map(c => c.slug) || []}
+                  tags={post.tags?.map(t => t.slug) || []}
+                  variant="sidebar"
+                />
+              </Suspense>
+            </div>
+          </aside>
+
         </div>
       </div>
 
-      {/* JSON-LD structured data for SEO */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -154,32 +178,28 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   );
 }
 
-// Loading skeletons
 function BlogPostSkeleton() {
   return (
     <div className="py-8 animate-pulse">
-      {/* Header */}
-      <div className="text-center mb-12">
-        <div className="flex justify-center gap-2 mb-4">
+      <div className="mb-8">
+        <div className="h-9 bg-muted rounded w-28" />
+      </div>
+      <div className="mb-12">
+        <div className="flex gap-2 mb-5">
           <div className="h-6 bg-muted rounded w-24" />
-          <div className="h-6 bg-muted rounded w-32" />
         </div>
-        <div className="h-12 bg-muted rounded mb-6" />
-        <div className="h-6 bg-muted rounded w-3/4 mx-auto mb-8" />
-        <div className="flex justify-center gap-6">
-          <div className="h-4 bg-muted rounded w-24" />
+        <div className="h-12 bg-muted rounded mb-5" />
+        <div className="h-12 bg-muted rounded w-3/4 mb-8" />
+        <div className="flex gap-5 border-y py-4">
+          <div className="w-8 h-8 bg-muted rounded-full" />
+          <div className="h-4 bg-muted rounded w-28" />
+          <div className="h-4 bg-muted rounded w-32" />
           <div className="h-4 bg-muted rounded w-20" />
-          <div className="h-4 bg-muted rounded w-16" />
         </div>
       </div>
-
-      {/* Featured image */}
-      <div className="aspect-video bg-muted rounded-lg mb-12" />
-
-      {/* Content */}
       <div className="space-y-4">
-        {[...Array(10)].map((_, i) => (
-          <div key={i} className="h-4 bg-muted rounded" />
+        {[...Array(12)].map((_, i) => (
+          <div key={i} className="h-4 bg-muted rounded" style={{ width: `${75 + (i % 4) * 6}%` }} />
         ))}
       </div>
     </div>
@@ -188,8 +208,8 @@ function BlogPostSkeleton() {
 
 function RelatedPostsSkeleton() {
   return (
-    <aside className="space-y-6 animate-pulse">
-      <div className="h-6 bg-muted rounded w-36" />
+    <div className="space-y-4 animate-pulse">
+      <div className="h-4 bg-muted rounded w-28" />
       {[...Array(3)].map((_, i) => (
         <div key={i} className="flex gap-3 p-3">
           <div className="w-20 h-20 bg-muted rounded-md flex-shrink-0" />
@@ -203,6 +223,6 @@ function RelatedPostsSkeleton() {
           </div>
         </div>
       ))}
-    </aside>
+    </div>
   );
 }

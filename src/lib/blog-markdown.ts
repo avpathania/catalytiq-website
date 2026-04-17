@@ -23,10 +23,32 @@ export function calculateReadingTime(content: string): number {
   return Math.ceil(words / wordsPerMinute);
 }
 
+// Strip a leading # H1 heading that duplicates the frontmatter title
+function stripLeadingH1(markdown: string): string {
+  return markdown.replace(/^\s*#\s+[^\n]+\n?/, '');
+}
+
+// Add id attributes to h2/h3 headings so the TOC can link to them
+function addHeadingIds(html: string): string {
+  const counts: Record<string, number> = {};
+  return html.replace(/<(h[23])([^>]*)>([\s\S]*?)<\/h[23]>/gi, (_, tag, attrs, inner) => {
+    const text = inner.replace(/<[^>]+>/g, '');
+    const base = text
+      .toLowerCase()
+      .replace(/[^\w\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '');
+    counts[base] = (counts[base] || 0) + 1;
+    const id = counts[base] > 1 ? `${base}-${counts[base]}` : base;
+    return `<${tag}${attrs} id="${id}">${inner}</${tag}>`;
+  });
+}
+
 // Convert markdown body to HTML
 async function markdownToHtml(markdown: string): Promise<string> {
   const result = await remark().use(remarkHtml).process(markdown);
-  return result.toString();
+  return addHeadingIds(result.toString());
 }
 
 // Parse a single markdown file into a BlogPost
@@ -35,7 +57,8 @@ async function parsePost(filename: string): Promise<BlogPost> {
   const fileContents = fs.readFileSync(filePath, 'utf8');
   const { data, content } = matter(fileContents);
 
-  const htmlContent = await markdownToHtml(content);
+  const strippedContent = stripLeadingH1(content);
+  const htmlContent = await markdownToHtml(strippedContent);
 
   const author: Author = {
     id: data.author?.email || 'default',
@@ -81,7 +104,7 @@ async function parsePost(filename: string): Promise<BlogPost> {
     created_at: publishedAt,
     updated_at: publishedAt,
     author_id: author.id,
-    reading_time: calculateReadingTime(content),
+    reading_time: calculateReadingTime(strippedContent),
     view_count: 0,
     seo_metadata: data.seo
       ? {

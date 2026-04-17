@@ -10,7 +10,7 @@ author:
   name: "Massimo Menoncin"
   email: "massimo@catalytiq.systems"
   bio: "Massimo Menoncin helps European businesses identify and eliminate the hidden costs of manual work through AI-powered automation."
-  linkedin_url: "https://www.linkedin.com/in/massimomenoncin"
+  linkedin_url: "https://it.linkedin.com/in/massimomenoncin/it"
 categories:
   - name: "Automation"
     slug: "automation"

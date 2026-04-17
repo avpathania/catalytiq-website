@@ -51,7 +51,9 @@ export { BlogHero } from "./sections/blog-hero";
 export { BlogGrid } from "./sections/blog-grid";
 export { BlogSidebar } from "./sections/blog-sidebar";
 export { BlogPost } from "./sections/blog-post";
+export { BlogToc } from "./sections/blog-toc";
 export { RelatedPosts } from "./sections/related-posts";
+export { ReadingProgress } from "./ui/reading-progress";
 export { FeaturedBlog } from "./sections/featured-blog";
 export { SocialShare } from "./ui/social-share";
 

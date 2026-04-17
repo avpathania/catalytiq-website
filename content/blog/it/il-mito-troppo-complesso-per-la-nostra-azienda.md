@@ -10,7 +10,7 @@ author:
   name: "Anshul Pathania"
   email: "anshul@catalytiq.com"
   bio: "Specialista in automazione aziendale per PMI europee, con focus su efficienza operativa e workflow intelligenti."
-  linkedin_url: "https://linkedin.com/in/anshulpathania"
+  linkedin_url: "https://in.linkedin.com/in/anshul-vikram-pathania"
 categories:
   - name: "Operazioni"
     slug: "operations"

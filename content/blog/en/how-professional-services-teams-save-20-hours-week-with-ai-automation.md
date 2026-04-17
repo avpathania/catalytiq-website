@@ -10,7 +10,7 @@ author:
   name: "Anshul Pathania"
   email: "anshul@catalytiq.com"
   bio: "Business automation strategist helping SMEs in Europe unlock operational efficiency through intelligent workflows."
-  linkedin_url: "https://linkedin.com/in/anshulpathania"
+  linkedin_url: "https://in.linkedin.com/in/anshul-vikram-pathania"
 categories:
   - name: "Automation"
     slug: "automation"
