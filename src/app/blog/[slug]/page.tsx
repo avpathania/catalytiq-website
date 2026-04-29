@@ -87,13 +87,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       {/* Full-bleed featured image hero */}
       {post.featured_image_url && (
         <div className="relative w-full aspect-[21/9] max-h-[480px] overflow-hidden">
-          <Image
-            src={post.featured_image_url}
-            alt={post.title}
-            fill
-            className="object-cover"
-            priority
-          />
+          {post.featured_image_url.endsWith('.svg') ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={post.featured_image_url} alt={post.title} className="absolute inset-0 w-full h-full object-cover" />
+          ) : (
+            <Image src={post.featured_image_url} alt={post.title} fill className="object-cover" priority />
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
         </div>
       )}

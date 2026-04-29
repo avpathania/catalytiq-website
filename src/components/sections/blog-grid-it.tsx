@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Calendar, Clock, User, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -238,12 +237,11 @@ function BlogPostCardIT({ post }: { post: BlogPost }) {
       <Link href={`/it/blog/${post.slug}`}>
         <div className="relative aspect-video">
           {post.featured_image_url ? (
-            <Image
-              src={post.featured_image_url}
-              alt={post.title}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
-            />
+              <img
+    src={post.featured_image_url}
+    alt={post.title}
+    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+  />
           ) : (
             <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
               <span className="text-3xl font-bold text-muted-foreground">

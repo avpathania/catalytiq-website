@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Calendar, Clock, User } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -93,12 +92,11 @@ function RelatedPostCard({ post, compact = false }: { post: RelatedPost; compact
         <Link href={`/blog/${post.slug}`} className="flex gap-3 p-3">
           <div className="relative w-20 h-20 flex-shrink-0 rounded-md overflow-hidden">
             {post.featured_image_url ? (
-              <Image
-                src={post.featured_image_url}
-                alt={post.title}
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-300"
-              />
+                <img
+    src={post.featured_image_url}
+    alt={post.title}
+    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+  />
             ) : (
               <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
                 <span className="text-xl font-bold text-muted-foreground">
@@ -132,12 +130,11 @@ function RelatedPostCard({ post, compact = false }: { post: RelatedPost; compact
       <Link href={`/blog/${post.slug}`}>
         <div className="relative aspect-video">
           {post.featured_image_url ? (
-            <Image
-              src={post.featured_image_url}
-              alt={post.title}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
-            />
+              <img
+    src={post.featured_image_url}
+    alt={post.title}
+    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+  />
           ) : (
             <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
               <span className="text-3xl font-bold text-muted-foreground">

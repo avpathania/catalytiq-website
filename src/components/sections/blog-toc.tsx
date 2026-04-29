@@ -25,9 +25,10 @@ function parseToc(html: string): TocItem[] {
 
 interface BlogTocProps {
   content: string;
+  label?: string;
 }
 
-export function BlogToc({ content }: BlogTocProps) {
+export function BlogToc({ content, label = 'On this page' }: BlogTocProps) {
   const [activeId, setActiveId] = useState('');
   const items = parseToc(content);
 
@@ -55,7 +56,7 @@ export function BlogToc({ content }: BlogTocProps) {
   return (
     <nav aria-label="Table of contents">
       <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
-        On this page
+        {label}
       </p>
       <ul className="space-y-0.5 max-h-[60vh] overflow-y-auto">
         {items.map(({ id, text, level }) => (

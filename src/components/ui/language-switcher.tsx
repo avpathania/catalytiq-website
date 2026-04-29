@@ -22,10 +22,12 @@ const LanguageSwitcher = () => {
   // Generate the target path for language switching
   const getTargetPath = () => {
     if (currentLocale === 'en') {
-      // Switch to Italian: add /it prefix
+      // Blog post slugs differ between languages — go to the listing instead
+      if (/^\/blog\/.+/.test(pathname)) return '/it/blog';
       return `/it${pathname}`;
     } else {
-      // Switch to English: remove /it prefix
+      // Blog post slugs differ between languages — go to the listing instead
+      if (/^\/it\/blog\/.+/.test(pathname)) return '/blog';
       return pathname.replace(/^\/it/, '') || '/';
     }
   };

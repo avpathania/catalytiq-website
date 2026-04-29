@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Search, Calendar, TrendingUp } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -184,12 +183,11 @@ export function BlogSidebar() {
                 >
                   <div className="relative w-16 h-16 flex-shrink-0">
                     {post.featured_image_url ? (
-                      <Image
-                        src={post.featured_image_url}
-                        alt={post.title}
-                        fill
-                        className="object-cover rounded-lg"
-                      />
+                        <img
+    src={post.featured_image_url}
+    alt={post.title}
+    className="absolute inset-0 w-full h-full object-cover rounded-lg"
+  />
                     ) : (
                       <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20 rounded-lg flex items-center justify-center">
                         <span className="text-sm font-bold text-muted-foreground">

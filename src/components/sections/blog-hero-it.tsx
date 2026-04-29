@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Calendar, Clock, User } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -58,12 +57,11 @@ export function BlogHeroIT() {
               <Link href={`/it/blog/${mainPost.slug}`}>
                 <div className="relative aspect-video">
                   {mainPost.featured_image_url ? (
-                    <Image
-                      src={mainPost.featured_image_url}
-                      alt={mainPost.title}
-                      fill
-                      className="object-cover"
-                    />
+                      <img
+    src={mainPost.featured_image_url}
+    alt={mainPost.title}
+    className="absolute inset-0 w-full h-full object-cover"
+  />
                   ) : (
                     <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
                       <span className="text-4xl font-bold text-muted-foreground">
@@ -127,12 +125,11 @@ export function BlogHeroIT() {
                   <div className="flex gap-4 p-6">
                     <div className="relative w-24 h-24 flex-shrink-0">
                       {post.featured_image_url ? (
-                        <Image
-                          src={post.featured_image_url}
-                          alt={post.title}
-                          fill
-                          className="object-cover rounded-lg"
-                        />
+                          <img
+    src={post.featured_image_url}
+    alt={post.title}
+    className="absolute inset-0 w-full h-full object-cover rounded-lg"
+  />
                       ) : (
                         <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20 rounded-lg flex items-center justify-center">
                           <span className="text-lg font-bold text-muted-foreground">

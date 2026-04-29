@@ -27,6 +27,7 @@ export { SolutionsResults } from "./sections/solutions-results";
 export { SolutionsCTA } from "./sections/solutions-cta";
 
 // Use Cases page components
+export { UseCasesCaseStudies } from "./sections/use-cases-case-studies";
 export { UseCasesStories } from "./sections/use-cases-stories";
 export { UseCasesComparison } from "./sections/use-cases-comparison";
 export { UseCasesROI } from "./sections/use-cases-roi";

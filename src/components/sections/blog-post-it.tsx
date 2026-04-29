@@ -85,13 +85,11 @@ export function BlogPostIT({ post }: BlogPostITProps) {
           {/* Featured Image */}
           {post.featured_image_url && (
             <div className="relative aspect-video mb-12 rounded-lg overflow-hidden">
-              <Image
-                src={post.featured_image_url}
-                alt={post.title}
-                fill
-                className="object-cover"
-                priority
-              />
+    <img
+      src={post.featured_image_url}
+      alt={post.title}
+      className="absolute inset-0 w-full h-full object-cover"
+    />
             </div>
           )}
 

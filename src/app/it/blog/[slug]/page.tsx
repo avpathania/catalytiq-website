@@ -1,12 +1,15 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
+import Image from 'next/image';
 import {
   MainLayout,
   SocialShare,
 } from '@/components';
 import { BlogPostIT } from '@/components/sections/blog-post-it';
 import { RelatedPostsIT } from '@/components/sections/related-posts-it';
+import { BlogToc } from '@/components/sections/blog-toc';
+import { ReadingProgress } from '@/components/ui/reading-progress';
 import { getBlogPostBySlug as getBlogPostBySlugIT, incrementViewCount } from '@/lib/blog-markdown-it';
 
 interface BlogPostPageITProps {
@@ -86,8 +89,23 @@ export default async function BlogPostPageIT({ params }: BlogPostPageITProps) {
 
   return (
     <MainLayout>
+      <ReadingProgress />
+
+      {/* Full-bleed featured image hero */}
+      {post.featured_image_url && (
+        <div className="relative w-full aspect-[21/9] max-h-[480px] overflow-hidden">
+          {post.featured_image_url.endsWith('.svg') ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={post.featured_image_url} alt={post.title} className="absolute inset-0 w-full h-full object-cover" />
+          ) : (
+            <Image src={post.featured_image_url} alt={post.title} fill className="object-cover" priority />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
+        </div>
+      )}
+
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-12 items-start">
           {/* Left: Article */}
           <article>
             <Suspense fallback={<BlogPostSkeleton />}>
@@ -97,8 +115,8 @@ export default async function BlogPostPageIT({ params }: BlogPostPageITProps) {
             <section className="py-8 border-t mt-4">
               <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
                 <div>
-                  <h3 className="text-lg font-semibold mb-2">Condividi questo articolo</h3>
-                  <p className="text-muted-foreground">
+                  <h3 className="text-lg font-semibold mb-1">Condividi questo articolo</h3>
+                  <p className="text-sm text-muted-foreground">
                     Aiuta altri a scoprire approfondimenti sull'automazione aziendale
                   </p>
                 </div>
@@ -107,17 +125,23 @@ export default async function BlogPostPageIT({ params }: BlogPostPageITProps) {
             </section>
           </article>
 
-          {/* Right: Related Posts Sidebar */}
-          <div className="lg:sticky lg:top-8">
-            <Suspense fallback={<RelatedPostsSkeleton />}>
-              <RelatedPostsIT
-                currentPostId={post.id}
-                categories={post.categories?.map(c => c.slug) || []}
-                tags={post.tags?.map(t => t.slug) || []}
-                variant="sidebar"
-              />
+          {/* Right: TOC + Related Posts */}
+          <aside className="lg:sticky lg:top-8 space-y-8">
+            <Suspense fallback={null}>
+              <BlogToc content={post.content} label="In questa pagina" />
             </Suspense>
-          </div>
+
+            <div className="border-t pt-8">
+              <Suspense fallback={<RelatedPostsSkeleton />}>
+                <RelatedPostsIT
+                  currentPostId={post.id}
+                  categories={post.categories?.map(c => c.slug) || []}
+                  tags={post.tags?.map(t => t.slug) || []}
+                  variant="sidebar"
+                />
+              </Suspense>
+            </div>
+          </aside>
         </div>
       </div>
 

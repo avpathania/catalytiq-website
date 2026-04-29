@@ -23,9 +23,25 @@ export function calculateReadingTime(content: string): number {
   return Math.ceil(words / wordsPerMinute);
 }
 
+function addHeadingIds(html: string): string {
+  const counts: Record<string, number> = {};
+  return html.replace(/<(h[23])([^>]*)>([\s\S]*?)<\/h[23]>/gi, (_, tag, attrs, inner) => {
+    const text = inner.replace(/<[^>]+>/g, '');
+    const base = text
+      .toLowerCase()
+      .replace(/[^\w\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '');
+    counts[base] = (counts[base] || 0) + 1;
+    const id = counts[base] > 1 ? `${base}-${counts[base]}` : base;
+    return `<${tag}${attrs} id="${id}">${inner}</${tag}>`;
+  });
+}
+
 async function markdownToHtml(markdown: string): Promise<string> {
   const result = await remark().use(remarkHtml).process(markdown);
-  return result.toString();
+  return addHeadingIds(result.toString());
 }
 
 async function parsePost(filename: string): Promise<BlogPost> {
