@@ -77,23 +77,34 @@ export function BookDemoModalIT({ children, onSubmit }: BookDemoModalITProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!validate()) {
       return
     }
 
     setSubmitting(true)
-    
+
     try {
       if (onSubmit) {
         await onSubmit(data)
       } else {
-        // Default behavior - log the data (replace with actual API call)
-        console.log("Richiesta prenotazione demo:", data)
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000))
+        // Default behavior - redirect to Calendly with pre-filled data
+        const calendlyUrl = new URL('https://calendly.com/catalytiq-info/30min')
+
+        // Pre-fill Calendly form with user data
+        const fullName = `${data.name} ${data.surname}`.trim()
+        calendlyUrl.searchParams.set('name', fullName)
+        calendlyUrl.searchParams.set('email', data.email)
+
+        // Add company info as a note in the URL if supported
+        calendlyUrl.searchParams.set('a1', data.companyName)
+        calendlyUrl.searchParams.set('a2', data.contactNumber)
+
+        // Redirect to Calendly
+        window.location.href = calendlyUrl.toString()
+        return
       }
-      
+
       // Close modal and reset form on success
       setIsOpen(false)
       reset()
